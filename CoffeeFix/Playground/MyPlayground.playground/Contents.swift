@@ -11,3 +11,17 @@ let yes = coffeeShopList.first { (CoffeeShop) -> Bool in
 
 print(yes)
 
+var cond1 = true
+var cond2 = false
+
+switch (cond1, cond2) {
+
+case (true, false):
+    print("yes")
+    
+case (false, false):
+    print("no")
+    
+default:
+    print("wtf")
+}

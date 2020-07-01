@@ -212,6 +212,7 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
+  - BadgeControl (1.2.1)
   - BoringSSL-GRPC (0.0.7):
     - BoringSSL-GRPC/Implementation (= 0.0.7)
     - BoringSSL-GRPC/Interface (= 0.0.7)
@@ -314,6 +315,7 @@ PODS:
   - SDWebImage/Core (5.8.1)
 
 DEPENDENCIES:
+  - BadgeControl
   - Firebase/Auth
   - Firebase/Firestore
   - Firebase/Storage
@@ -322,6 +324,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - abseil
+    - BadgeControl
     - BoringSSL-GRPC
     - Firebase
     - FirebaseAuth
@@ -342,6 +345,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
+  BadgeControl: 67036e7f586930bba15084dbf89ebce7aa2f2bc2
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   Firebase: fc4cbf6f1592636431821ef9a3c557e4dfd9f268
   FirebaseAuth: b85c064e0ac60f82486728d50a4803f235687302
@@ -360,6 +364,6 @@ SPEC CHECKSUMS:
   PromisesObjC: b48e0338dbbac2207e611750777895f7a5811b75
   SDWebImage: e3eae2eda88578db0685a0c88597fdadd9433f05
 
-PODFILE CHECKSUM: cd8988782494014cb84da45b4e6507b0a058d35c
+PODFILE CHECKSUM: c40363de243aff38c598827f933168f97f8e05b5
 
 COCOAPODS: 1.9.1

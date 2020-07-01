@@ -32,7 +32,7 @@ class CoffeeShopCell: UITableViewCell {
 
     // configures the cell
     func setCell(vc: NearbyViewController, coffeeShop: CoffeeShop){
-        
+        print(coffeeShop.logoUUID)
         StorageFirebase.getLogoURL(logoUUID: coffeeShop.logoUUID) { (URL) in
             
             self.logoView.sd_setImage(with: URL, placeholderImage: UIImage(named: "placeholder"),options: SDWebImageOptions.highPriority, completed: nil)

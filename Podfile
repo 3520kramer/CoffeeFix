@@ -10,4 +10,5 @@ target 'CoffeeFix' do
   pod 'Firebase/Firestore'
   pod 'Firebase/Storage'
   pod 'SDWebImage'
+  pod 'BadgeControl'
 end

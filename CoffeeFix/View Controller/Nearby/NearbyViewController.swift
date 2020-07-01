@@ -12,7 +12,7 @@ import SDWebImage
 
 class NearbyViewController: UIViewController {
 
-    @IBOutlet weak var map: MKMapView! //
+    @IBOutlet weak var map: MKMapView!
     @IBOutlet weak var coffeeShopTableView: UITableView!
     
     var locationAuthorizationManager: LocationAuthorizationManager!
@@ -21,7 +21,6 @@ class NearbyViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         
         /// Sets the delegate of the map to this viewcontroller
         map.delegate = self
@@ -37,12 +36,20 @@ class NearbyViewController: UIViewController {
         locationAuthorizationManager.checkLocationService()
         
         /// Starts the listener for fetching coffeshop data from the db
-        CoffeeShopCollection.startListener(parentVC: self)
+        CoffeeShopCollection.startListener(parentVC: self, completion: {
+            
+            /// When the listnere is finished we call a function from the mapDataAdapter to update the annotations on the parentVCs map
+            MapDataAdapter.updateMarkersOnMap(map: self.map)
+            
+            /// Makes the table update it's data after list is filled, otherwise we would have an empty table
+            self.coffeeShopTableView.reloadData()
+        })
     }
     
     /// Called each time the view controller is out of the current view
     override func viewDidDisappear(_ animated: Bool) {
         super.viewWillAppear(true)
+        CoffeeShopCollection.removeListener()
     }
     
    // MARK: - Map View Setup
@@ -115,9 +122,7 @@ extension NearbyViewController: MKMapViewDelegate{
         if let annotation = view.annotation as? MKPointAnnotation, let title = annotation.title{
             
             /// Uses the list method first. Uses a closure to determine the first element in the list which meets our condition
-            selectedCoffeeShop = CoffeeShopCollection.coffeeShopList.first { (CoffeeShop) -> Bool in
-                return CoffeeShop.id == title
-            }
+            selectedCoffeeShop = CoffeeShopCollection.getCoffeeShop(with: title)
         }
     }
 
@@ -135,6 +140,7 @@ extension NearbyViewController: CLLocationManagerDelegate{
     
     /// Every time the user moves, this function is called
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("Location")
         guard let location = locations.last else { return }
         
         /// Creates a CL Location Coordinate to use as center on the map
@@ -147,8 +153,20 @@ extension NearbyViewController: CLLocationManagerDelegate{
         /// Sets the maps region to our new region
         map.setRegion(region, animated: true)
         
+        /// Updates the distance from the user to the coffeshops
+        CoffeeShopCollection.updateDistanceToUserFromCoffeeShops(userLocation: location, completion: {
+            print("updated")
+            /// Sorts the list according to the distance
+            CoffeeShopCollection.sortCoffeeShopListOnDistanceToUser(completion: {
+                print("sorted")
+
+                /// reloads the tabledata as the user has moved and we need to calculate a new distance to the coffeeshops
+                coffeeShopTableView.reloadData()
+                print("reloaded")
+
+            })
+        })
         
-        //calculateDistanceFromUserToCoffeeShop(userLocation: location)
     }
     
     /// if the authorization changes, then we need to call our checkAuthorization function
@@ -185,7 +203,7 @@ extension NearbyViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedCoffeeShop = CoffeeShopCollection.coffeeShopList[indexPath.row]
         
-        performSegue(withIdentifier: "showDetail", sender: nil)
+        performSegue(withIdentifier: "showCoffeeShop", sender: nil)
         
         // removes the gray color shown when selecting a row
         tableView.deselectRow(at: indexPath, animated: true)
